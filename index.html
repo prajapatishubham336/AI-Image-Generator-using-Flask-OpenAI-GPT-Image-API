@@ -1,0 +1,254 @@
+<!doctype html>
+<html>
+<head>
+
+<title>DALLE Image Generator</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+
+body{
+
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#667eea,#764ba2);
+
+}
+
+
+.container{
+
+    background:white;
+    width:500px;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    text-align:center;
+
+}
+
+
+h1{
+
+    color:#333;
+    margin-bottom:25px;
+    font-size:28px;
+
+}
+
+
+
+.input-box{
+
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+
+}
+
+
+input{
+
+    flex:1;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:16px;
+
+}
+
+
+button{
+
+    padding:12px 20px;
+    border:none;
+    border-radius:8px;
+    background:#667eea;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+
+}
+
+
+button:hover{
+
+    background:#5563c1;
+
+}
+
+
+
+#loadingGif{
+
+    margin:20px;
+    font-size:18px;
+    color:#555;
+
+}
+
+
+.imageCont img{
+
+    margin-top:20px;
+    width:350px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+
+}
+
+
+.error{
+
+    color:red;
+    margin-top:15px;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1>🎨 DALL-E Image Generator</h1>
+
+
+<div class="input-box">
+
+<input id="imgprompt" 
+type="text" 
+placeholder="Enter image description...">
+
+
+<button id="submitbtn">
+Generate
+</button>
+
+
+</div>
+
+
+
+<div id="loadingGif" style="display:none;">
+⏳ Generating image...
+</div>
+
+
+<div class="imageCont"></div>
+
+
+</div>
+
+
+
+
+
+<script>
+
+
+const submitbtn = document.getElementById("submitbtn");
+
+const imgprompt = document.getElementById("imgprompt");
+
+const loadingGif = document.getElementById("loadingGif");
+
+
+
+submitbtn.addEventListener("click", async(e)=>{
+
+
+e.preventDefault();
+
+
+
+const prompt = imgprompt.value;
+
+
+if(prompt===""){
+
+alert("Please enter a prompt");
+return;
+
+}
+
+
+
+loadingGif.style.display="block";
+
+
+
+const res = await fetch(
+"/generateimages/" + encodeURIComponent(prompt)
+);
+
+
+
+const data = await res.json();
+
+
+
+loadingGif.style.display="none";
+
+
+
+const container=document.querySelector(".imageCont");
+
+
+container.innerHTML="";
+
+
+
+if(data.error){
+
+
+container.innerHTML=
+`<p class="error">${data.error}</p>`;
+
+return;
+
+
+}
+
+
+
+data.data.forEach(img=>{
+
+
+const image=document.createElement("img");
+
+
+image.src="data:image/png;base64,"+img.b64_json;
+
+
+container.appendChild(image);
+
+
+
+});
+
+
+});
+
+
+
+</script>
+
+
+</body>
+</html>
