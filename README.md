@@ -62,7 +62,7 @@ AI-Image-Generator/
 ### Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/AI-Image-Generator.git
+git clone https://github.com/prajapatishubham336/AI-Image-Generator.git
 
 cd AI-Image-Generator
 ```
